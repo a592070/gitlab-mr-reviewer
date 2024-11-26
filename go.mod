@@ -1,0 +1,1 @@
+module gitlab-mr-reviewer
