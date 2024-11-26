@@ -11,6 +11,7 @@ OpenAI.
 ## run command
 make build && build/gitlab-mr-reviewer --project=${GITLAB_PROJECT_ID}\
       --merge-request=${GITLAB_MERGE_REQUEST_IID} \
+      --gitlab-url="${YOUR_GITLAB_URL}" \
       --gitlab-token="${YOUR_GITLAB_ACCESS_TOKEN}" \
       --openai-token="${YOUR_OPENAI_API_KEY}"
 ```
@@ -30,6 +31,7 @@ make build && build/gitlab-mr-reviewer --project=${GITLAB_PROJECT_ID}\
       --config="./config/config.yaml"
       --project=${CI_PROJECT_ID} 
       --merge-request=${CI_MERGE_REQUEST_IID} 
+      --gitlab-url="${CI_SERVER_URL}"
       --gitlab-token="${YOUR_GITLAB_ACCESS_TOKEN}" 
       --openai-token="${YOUR_OPENAI_API_KEY}"
 
