@@ -41,3 +41,9 @@ review-merge-request:
     - .gitlab-mr-reviewer
   allow_failure: true
 ```
+
+## Build image
+
+```shell
+make docker-build image=gitlab-mr-reviewer
+```

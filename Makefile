@@ -17,3 +17,6 @@ build:
 
 run: build
 	./build/gitlab-mr-reviewer
+
+docker-build:
+	docker build . -t $(image)
