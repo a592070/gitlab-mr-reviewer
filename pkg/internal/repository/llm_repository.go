@@ -13,6 +13,7 @@ type LLMRepository interface {
 type SummarizeRelativeChangesInput struct {
 	MessageContext []domain.Message
 	MaxOutputToken int64
+	Model          string
 }
 type SummarizeRelativeChangesOutput struct {
 	Messages []domain.Message
@@ -21,6 +22,7 @@ type SummarizeRelativeChangesOutput struct {
 type SummarizeReleaseNoteInput struct {
 	MessageContext []domain.Message
 	MaxOutputToken int64
+	Model          string
 }
 type SummarizeReleaseNoteOutput struct {
 	Messages []domain.Message

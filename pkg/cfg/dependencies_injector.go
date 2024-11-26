@@ -25,6 +25,7 @@ func NewCliDependenciesInjector(cfg *Config, logger *logging.ZaprLogger) (*CliDe
 
 	mergeRequestCommand := cli.NewMergeRequestCommand(
 		cfg.Gitlab.ProjectId, cfg.Gitlab.MergeRequestId,
+		cfg.OpenAI.Model, cfg.OpenAI.MaxInputToken, cfg.OpenAI.MaxOutputToken,
 		logger,
 		mergeRequestHandler,
 	)

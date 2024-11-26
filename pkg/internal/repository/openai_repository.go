@@ -45,7 +45,7 @@ func (r *openaiRepository) SummarizeRelativeChanges(ctx context.Context, input S
 		ctx,
 		openai.ChatCompletionNewParams{
 			Messages:            openai.F(openaiMessages),
-			Model:               openai.F(openai.ChatModelGPT4o),
+			Model:               openai.F(input.Model),
 			MaxCompletionTokens: openai.Int(input.MaxOutputToken),
 		},
 	)
@@ -61,6 +61,7 @@ func (r *openaiRepository) SummarizeRelativeChanges(ctx context.Context, input S
 		return output, errors.New("response has no choices")
 	}
 
+	r.logger.Info(fmt.Sprintf("Response Model: %s", resp.Model))
 	r.logger.Info(fmt.Sprintf("Response TotalTokens: %d", resp.Usage.TotalTokens))
 	r.logger.Info(fmt.Sprintf("Response PromptTokens: %d", resp.Usage.PromptTokens))
 	r.logger.Info(fmt.Sprintf("Response CompletionTokens: %d", resp.Usage.CompletionTokens))
@@ -92,7 +93,7 @@ func (r *openaiRepository) SummarizeReleaseNote(ctx context.Context, input Summa
 		ctx,
 		openai.ChatCompletionNewParams{
 			Messages:            openai.F(openaiMessages),
-			Model:               openai.F(openai.ChatModelGPT4o),
+			Model:               openai.F(input.Model),
 			MaxCompletionTokens: openai.Int(input.MaxOutputToken),
 		},
 	)
@@ -108,6 +109,7 @@ func (r *openaiRepository) SummarizeReleaseNote(ctx context.Context, input Summa
 		return output, errors.New("response has no choices")
 	}
 
+	r.logger.Info(fmt.Sprintf("Response Model: %s", resp.Model))
 	r.logger.Info(fmt.Sprintf("Response TotalTokens: %d", resp.Usage.TotalTokens))
 	r.logger.Info(fmt.Sprintf("Response PromptTokens: %d", resp.Usage.PromptTokens))
 	r.logger.Info(fmt.Sprintf("Response CompletionTokens: %d", resp.Usage.CompletionTokens))

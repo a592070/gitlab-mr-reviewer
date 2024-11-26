@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/pkg/errors"
 	"gitlab-mr-reviewer/pkg/utils"
+	"slices"
 )
 
 const (
@@ -14,10 +15,13 @@ const (
 	ModelGPT4OMini = "gpt-4o-mini"
 )
 
+var models = []string{ModelGPT4O, ModelGPT4OMini}
+
 type CodeReviewMessagebox struct {
 	Message        []Message
 	MaxInputToken  int64
 	MaxOutputToken int64
+	Model          string
 }
 
 type Message struct {
@@ -25,14 +29,25 @@ type Message struct {
 	Content string
 }
 
-func NewCodeReviewMessageBox(systemMessage string) *CodeReviewMessagebox {
+func NewCodeReviewMessageBox(systemMessage string, model string, maxInputToken int64, maxOutputToken int64) (*CodeReviewMessagebox, error) {
+	if maxInputToken <= 0 {
+		maxInputToken = 10000
+	}
+	if maxOutputToken <= 0 {
+		maxOutputToken = 10000
+	}
+	if !slices.Contains(models, model) {
+		return nil, errors.Errorf("Not allow model %s, only accept models %s", model, models)
+	}
+
 	return &CodeReviewMessagebox{
-		MaxInputToken:  10000,
-		MaxOutputToken: 10000,
+		MaxInputToken:  maxInputToken,
+		MaxOutputToken: maxOutputToken,
+		Model:          model,
 		Message: []Message{
 			newSystemMessage(systemMessage),
 		},
-	}
+	}, nil
 }
 
 func NewUserMessage(content string) Message {
@@ -60,7 +75,7 @@ func (c *CodeReviewMessagebox) AppendMessage(messages []Message) {
 
 func (c *CodeReviewMessagebox) AddUserMessage(content string) error {
 	m := NewUserMessage(content)
-	countTokens, err := utils.CountTokensWithGPT4OMini(m.Content)
+	countTokens, err := utils.CountTokens(c.Model, m.Content)
 	if err != nil {
 		return errors.Wrap(err, "Unable to count tokens")
 	}

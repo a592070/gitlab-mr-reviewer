@@ -27,8 +27,11 @@ type Config struct {
 		PathFilters    []string
 	}
 	OpenAI struct {
-		Token         string `validate:"required"`
-		SystemMessage string `validate:"required"`
+		Token          string `validate:"required"`
+		SystemMessage  string `validate:"required"`
+		Model          string `validate:"required"`
+		MaxInputToken  int64  `validate:"required"`
+		MaxOutputToken int64  `validate:"required"`
 	}
 }
 
@@ -59,6 +62,7 @@ func NewCliConfig(rootCmd *cobra.Command) (*Config, error) {
 	rootCmd.PersistentFlags().StringVar(&configFilePath, "config", defaultConfigFileDir, "Config file directory")
 	rootCmd.PersistentFlags().Int32("project", 0, "Gitlab Project ID, or use GITLAB_PROJECTID environment variable.")
 	rootCmd.PersistentFlags().Int32("merge-request", 0, "Gitlab MergeRequest ID, or use GITLAB_MERGEREQUESTID environment variable.")
+	rootCmd.PersistentFlags().String("gitlab-url", "", "Gitlab URL, or use GITLAB_URL environment variable.")
 	rootCmd.PersistentFlags().String("gitlab-token", "", "Gitlab authorization token, or use GITLAB_TOKEN environment variable.")
 	rootCmd.PersistentFlags().String("openai-token", "", "OpenAI authorization token, or use OPENAI_TOKEN environment variable.")
 	rootCmd.PersistentFlags().String("log", "info", "Log level, or use LOGLEVEL environment variable.")
@@ -76,6 +80,9 @@ func NewCliConfig(rootCmd *cobra.Command) (*Config, error) {
 		return nil, errors.Wrap(err, "[NewCliConfig]failed to bind flag")
 	}
 	if err := v.BindPFlag("Gitlab.MergeRequestId", rootCmd.PersistentFlags().Lookup("merge-request")); err != nil {
+		return nil, errors.Wrap(err, "[NewCliConfig]failed to bind flag")
+	}
+	if err := v.BindPFlag("Gitlab.URL", rootCmd.PersistentFlags().Lookup("gitlab-url")); err != nil {
 		return nil, errors.Wrap(err, "[NewCliConfig]failed to bind flag")
 	}
 	if err := v.BindPFlag("Gitlab.Token", rootCmd.PersistentFlags().Lookup("gitlab-token")); err != nil {

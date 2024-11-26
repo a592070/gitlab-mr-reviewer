@@ -21,8 +21,11 @@ type MergeRequestReviewer interface {
 }
 
 type MergeRequestReviewInput struct {
-	ProjectId      int32 `json:"project_id,omitempty" validate:"required,gt=0"`
-	MergeRequestId int32 `json:"merge_request_id,omitempty" validate:"required,gt=0"`
+	ProjectId      int32  `json:"project_id,omitempty" validate:"required,gt=0"`
+	MergeRequestId int32  `json:"merge_request_id,omitempty" validate:"required,gt=0"`
+	Model          string `json:"model,omitempty" validate:"required"`
+	MaxInputToken  int64  `json:"max_input_token" validate:"gt=0"`
+	MaxOutputToken int64  `json:"max_output_token" validate:"gt=0"`
 }
 type MergeRequestReviewOutput struct {
 	SummarizeRelativeChanges string `json:"summarize_relative_changes"`
@@ -73,7 +76,10 @@ func (r *gitlabMergeRequestReviewer) Apply(ctx context.Context, input *MergeRequ
 		return nil, ErrorIgnoreCodeReview
 	}
 
-	codeReviewMessageBox := domain.NewCodeReviewMessageBox(r.systemMessage)
+	codeReviewMessageBox, err := domain.NewCodeReviewMessageBox(r.systemMessage, input.Model, input.MaxInputToken, input.MaxOutputToken)
+	if err != nil {
+		return nil, err
+	}
 
 	summarizeRelativeChanges, err := r.summarizeRelativeChanges(ctx, mergeRequest, codeReviewMessageBox)
 	if err != nil {
@@ -123,6 +129,7 @@ func (r *gitlabMergeRequestReviewer) summarizeRelativeChanges(ctx context.Contex
 	codeReviewData, err := r.openaiRepository.SummarizeRelativeChanges(ctx, repository.SummarizeRelativeChangesInput{
 		MessageContext: codeReviewMessageBox.Message,
 		MaxOutputToken: codeReviewMessageBox.MaxOutputToken,
+		Model:          codeReviewMessageBox.Model,
 	})
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to create relative changes completion")
@@ -145,6 +152,7 @@ func (r *gitlabMergeRequestReviewer) summarizeReleaseNote(ctx context.Context, c
 	codeReviewData, err := r.openaiRepository.SummarizeReleaseNote(ctx, repository.SummarizeReleaseNoteInput{
 		MessageContext: codeReviewMessageBox.Message,
 		MaxOutputToken: codeReviewMessageBox.MaxOutputToken,
+		Model:          codeReviewMessageBox.Model,
 	})
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to create release note completion")

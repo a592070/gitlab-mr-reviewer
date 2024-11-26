@@ -114,6 +114,7 @@ func TestMergeRequestReviewer(t *testing.T) {
 			output, err := mergerRequestReviewer.Apply(ctx, &MergeRequestReviewInput{
 				ProjectId:      1,
 				MergeRequestId: 1,
+				Model:          "gpt-4o-mini",
 			})
 
 			ginkgo.By("output should not error")
@@ -130,6 +131,7 @@ func TestMergeRequestReviewer(t *testing.T) {
 			_, err := mergerRequestReviewer.Apply(ctx, &MergeRequestReviewInput{
 				ProjectId:      0,
 				MergeRequestId: 0,
+				Model:          "gpt-4o-mini",
 			})
 
 			ginkgo.By("should got an error")
