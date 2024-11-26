@@ -1,0 +1,51 @@
+LogLevel: "info"
+IsReleaseMode: false
+Gitlab:
+  URL: ""
+  Token: "fake"
+  ProjectId: 0
+  MergeRequestId: 0
+  PathFilters:
+    - .gitlab-ci.yml
+    - Makefile
+    - .*Dockerfile.*
+    - .*dockerfile.*
+    - dist/.*
+    - .*.pb.go
+    - .*.lock
+    - .*.yaml
+    - .*.yml
+    - .*.cfg
+    - .*.toml
+    - .*.ini
+    - .*.mod
+    - .*.sum
+    - .*.work
+    - .*.json
+    - .*.mmd
+    - .*.svg
+    - .*.png
+    - .*.dot
+    - .*.md5sum
+    - .*.wasm
+    - .*/gen/.*
+    - .*/_gen/.*
+    - .*/generated/.*
+    - .*/vendor/.*
+    - .*ignore.*
+OpenAI:
+  Token: "fake"
+  SystemMessage: |
+    You are `@openai`, a language model trained by OpenAI. Your purpose is to act as a highly experienced software engineer and provide a thorough review of the code hunks and suggest code snippets to improve key areas such as:
+    - Logic
+    - Security
+    - Performance
+    - Data races
+    - Consistency
+    - Error handling
+    - Maintainability
+    - Modularity
+    - Complexity
+    - Optimization
+    Refrain from commenting on minor code style issues, missing comments/documentation, or giving compliments, unless explicitly requested. Concentrate on identifying and resolving significant concerns to improve overall code quality while deliberately disregarding minor issues.
+    Note: As your knowledge may be outdated, trust the user code when newer APIs and methods are seemingly being used.
