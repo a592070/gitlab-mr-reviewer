@@ -1,6 +1,7 @@
 # Gitlab MergeRequest Reviewer
 
-`Gitlab MergeRequest Reviewer` would review the file changes in the given merge request, and generate the summary.
+`Gitlab MergeRequest Reviewer` reviews the file changes in the given merge request, and generates the summary using
+OpenAI.
 
 ## How to use
 
